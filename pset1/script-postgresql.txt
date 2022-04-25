@@ -1,0 +1,284 @@
+/* Comecei fazendo a implementação no PostgreSQL pelo terminal, instalando o pack de linguagem, conforme o passo a passo do PDF pset-1.
+Depois, já no PostgreSQL dentro do DBeaver, abri o console SQL do DBeaver e criei o meu usuário com o código: */
+
+CREATE ROLE eduardo SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN PASSWORD '123456';
+
+/* Depois com CTRL+ENTER dei "run" no código e foi.
+Fechei o DBeaver e entrei novamente, mas com o meu usuário.
+Abri novamente o console SQL do DBeaver e criei o banco de dados "uvv" com o código: */
+
+CREATE DATABASE uvv WITH
+OWNER = 'eduardo'
+TEMPLATE = template0
+ENCODING = 'UTF8'
+LC_COLLATE = 'pt_BR.UTF-8'
+LC_CTYPE = 'pt_BR.UTF-8'
+ALLOW_CONNECTIONS = true;
+
+-- Dei o CRTL+ENTER e comecei a criar dentro de "uvv" o esquema "elmasri" com o código:
+
+CREATE SCHEMA elmasri AUTHORIZATION eduardo;
+
+-- E deixei esse esquema como padrão desta forma:
+
+ALTER USER eduardo
+SET SEARCH_PATH TO elmasri, "$user", public;
+
+/* Logo após isso, fechei e entrei novamente no DBeaver e testei se estava tudo correto usando o código:
+
+SELECT CURRENT_SCHEMA();
+
+para ver se o esquema padrão teria alterado. E foi. */
+
+-- Logo em seguida comecei a implementar as tabelas com os seguintes códigos:
+
+CREATE TABLE elmasri.funcionario (
+                cpf CHAR(11) NOT NULL,
+                primeiro_nome VARCHAR(15) NOT NULL,
+                nome_meio CHAR(1),
+                ultimo_nome VARCHAR(15) NOT NULL,
+                data_nascimento DATE,
+                endereco VARCHAR(99),
+                sexo CHAR(1),
+                salario NUMERIC(10,2),
+                cpf_supervisor CHAR(11) NOT NULL,
+                numero_departamento INTEGER NOT NULL,
+                CONSTRAINT pk_funcionario PRIMARY KEY (cpf)
+);
+
+-- Eu alterei o valor de VARCHAR de endereco de '30' para '99', pois durante a implementação de dados não teria inserido os dados.
+-- Eu fiz os comentários por ultimo, no entanto preferi já deixar seus scripts aqui por maior organização, creio eu.
+
+COMMENT ON TABLE elmasri.funcionario IS 'Essa tabela mostra os dados de cada funcionário da empresa.';
+COMMENT ON COLUMN elmasri.funcionario.cpf IS 'Essa coluna mostra o CPF de cada funcionário da empresa, sendo ela PK.';
+COMMENT ON COLUMN elmasri.funcionario.primeiro_nome IS 'Essa coluna mostra o primeiro nome do funcionário, ela não pode ser nula.';
+COMMENT ON COLUMN elmasri.funcionario.nome_meio IS 'Essa coluna mostra a inicial do nome do meio do funcionário.';
+COMMENT ON COLUMN elmasri.funcionario.ultimo_nome IS 'Essa coluna mostra o ultimo nome do funcionário, ela não pode ser nula.';
+COMMENT ON COLUMN elmasri.funcionario.data_nascimento IS 'Essa coluna mostra a data de nascimento do funcionário.';
+COMMENT ON COLUMN elmasri.funcionario.endereco IS 'Essa coluna mostra o endereço do funcionário.';
+COMMENT ON COLUMN elmasri.funcionario.sexo IS 'Essa coluna mostra o sexo do funcionário, somente M ou F.';
+COMMENT ON COLUMN elmasri.funcionario.salario IS 'Essa coluna mostra o salário do funcionário.';
+COMMENT ON COLUMN elmasri.funcionario.cpf_supervisor IS 'Essa coluna mostra o CPF do supervisor desse funcionário, sendo ela uma FK de elmasri.funcionario.cpf.';
+COMMENT ON COLUMN elmasri.funcionario.numero_departamento IS 'Essa coluna mostra o nome do departamento que o funcionário trabalha, não pode ser nula.';
+
+
+CREATE TABLE elmasri.departamento (
+                numero_departamento INTEGER NOT NULL,
+                nome_departamento VARCHAR(15) NOT NULL,
+                cpf_gerente CHAR(11) NOT NULL,
+                data_inicio_gerente DATE,
+                CONSTRAINT pk_departamento PRIMARY KEY (numero_departamento)
+);
+
+CREATE UNIQUE INDEX departamento_idx
+ ON elmasri.departamento
+ ( nome_departamento );
+
+COMMENT ON TABLE elmasri.departamento IS 'Essa é a tabela a qual possui as informações sobre os departamentos de uma empresa hipotética.';
+COMMENT ON COLUMN elmasri.departamento.numero_departamento IS 'Nessa coluna há os números de cada departamento nessa empresa, sendo também a PK, chave primária, dessa respectiva tabela.';
+COMMENT ON COLUMN elmasri.departamento.nome_departamento IS 'Nessa coluna há os nomes de cada departamento, sendo também uma AK, chave única.';
+COMMENT ON COLUMN elmasri.departamento.cpf_gerente IS 'Nessa coluna há o cpf do gerente de cada departamento, sendo também uma FK, chave estrangeira, de funcionario.cpf.';
+COMMENT ON COLUMN elmasri.departamento.data_inicio_gerente IS 'Nessa coluna há a data do início da gerencia do atual gerente de seu departamento.';
+
+
+CREATE TABLE elmasri.localizacoes_departamento (
+                numero_departamento INTEGER NOT NULL,
+                local VARCHAR(15) NOT NULL,
+                CONSTRAINT pk_localizacoes_departamento PRIMARY KEY (numero_departamento, local)
+);
+
+COMMENT ON TABLE elmasri.localizacoes_departamento IS 'Essa tabela mostra de maneira mais prática onde está situado cada departamento.';
+COMMENT ON COLUMN elmasri.localizacoes_departamento.numero_departamento IS 'Essa coluna mostra a o número de cada departamento, sendo uma PFK, uma chave primária que é estrangeira de outra tabela.';
+COMMENT ON COLUMN elmasri.localizacoes_departamento.local IS 'Essa coluna mostra o local que está situado cada departamento, sendo uma PK.';
+
+
+CREATE TABLE elmasri.projeto (
+                numero_projeto INTEGER NOT NULL,
+                nome_projeto VARCHAR(15) NOT NULL,
+                local_projeto VARCHAR(15),
+                numero_departamento INTEGER NOT NULL,
+                CONSTRAINT pk_projeto PRIMARY KEY (numero_projeto)
+);
+
+CREATE UNIQUE INDEX projeto_idx
+ ON elmasri.projeto
+ ( nome_projeto );
+
+COMMENT ON TABLE elmasri.projeto IS 'Essa tabela mostra os dados referentes aos projetos de cada departamento.';
+COMMENT ON COLUMN elmasri.projeto.numero_projeto IS 'Essa coluna mostra o número de cada projeto referente a tal departamento, sendo também uma PK.';
+COMMENT ON COLUMN elmasri.projeto.nome_projeto IS 'Essa coluna mostra o nome de cada projeto referente ao seu número, sendo também uma AK.';
+COMMENT ON COLUMN elmasri.projeto.local_projeto IS 'Essa coluna mostra onde que está situada cada projeto.';
+COMMENT ON COLUMN elmasri.projeto.numero_departamento IS 'Essa coluna mostra qual departamento está relacionado esse projeto, sendo também uma FK.';
+
+
+CREATE TABLE elmasri.dependente (
+                cpf_funcionario CHAR(11) NOT NULL,
+                nome_dependente VARCHAR(15) NOT NULL,
+                sexo CHAR(1),
+                data_nascimento DATE,
+                parentesco VARCHAR(15),
+                CONSTRAINT pk_dependente PRIMARY KEY (cpf_funcionario, nome_dependente)
+);
+
+COMMENT ON TABLE elmasri.dependente IS 'Essa tabela mostra os dependentes de cada funcionário e alguns dados sobre eles.';
+COMMENT ON COLUMN elmasri.dependente.cpf_funcionario IS 'Essa coluna mostra o CPF do funcionário, sendo ela uma PFK de elmasri.funcionario.';
+COMMENT ON COLUMN elmasri.dependente.nome_dependente IS 'Essa coluna mostra o nome do dependente do funcionário, sendo ela uma PK.';
+COMMENT ON COLUMN elmasri.dependente.sexo IS 'Essa coluna mostra o sexo do dependente do funcionário, sendo M ou F.';
+COMMENT ON COLUMN elmasri.dependente.data_nascimento IS 'Essa coluna mostra a data de nascimento do dependente do funcionário.';
+COMMENT ON COLUMN elmasri.dependente.parentesco IS 'Essa coluna mostra o grau de parentesco que o dependente tem com o funcionário.';
+
+
+CREATE TABLE elmasri.trabalha_em (
+                cpf_funcionario CHAR(11) NOT NULL,
+                numero_projeto INTEGER NOT NULL,
+                horas NUMERIC(3,1) NOT NULL,
+                CONSTRAINT pk_trabalha_em PRIMARY KEY (cpf_funcionario, numero_projeto)
+);
+
+COMMENT ON TABLE elmasri.trabalha_em IS 'Essa tabela mostra em qual projeto cada funcionário trabalha.';
+COMMENT ON COLUMN elmasri.trabalha_em.cpf_funcionario IS 'Essa coluna mostra o CPF do funcionário, sendo ela uma PFK de elmasri.funcionario.';
+COMMENT ON COLUMN elmasri.trabalha_em.numero_projeto IS 'Essa coluna mostra o número do projeto em que o funcionário trabalha, sendo ela uma PFK de elmasri.projeto.';
+COMMENT ON COLUMN elmasri.trabalha_em.horas IS 'Essa coluna mostra o número de horas trabalhadas por funcioário, não pode ser nula.';
+
+
+-- Após criar as tabelas comecei a fazer seus relacionamentos:
+
+ALTER TABLE elmasri.dependente ADD CONSTRAINT funcionario_dependente_fk
+FOREIGN KEY (cpf_funcionario)
+REFERENCES elmasri.funcionario (cpf)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE elmasri.funcionario ADD CONSTRAINT funcionario_funcionario_fk
+FOREIGN KEY (cpf_supervisor)
+REFERENCES elmasri.funcionario (cpf)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE elmasri.departamento ADD CONSTRAINT funcionario_departamento_fk
+FOREIGN KEY (cpf_gerente)
+REFERENCES elmasri.funcionario (cpf)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE elmasri.trabalha_em ADD CONSTRAINT funcionario_trabalha_em_fk
+FOREIGN KEY (cpf_funcionario)
+REFERENCES elmasri.funcionario (cpf)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE elmasri.localizacoes_departamento ADD CONSTRAINT departamento_localizacoes_departamento_fk
+FOREIGN KEY (numero_departamento)
+REFERENCES elmasri.departamento (numero_departamento)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE elmasri.projeto ADD CONSTRAINT departamento_projeto_fk
+FOREIGN KEY (numero_departamento)
+REFERENCES elmasri.departamento (numero_departamento)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE elmasri.trabalha_em ADD CONSTRAINT projeto_trabalha_em_fk
+FOREIGN KEY (numero_projeto)
+REFERENCES elmasri.projeto (numero_projeto)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+
+-- E após fazer seus relacionamentos comecei a inserir seus dados:
+
+INSERT INTO elmasri.funcionario VALUES
+(12345678966, 'João', 'B', 'Silva', '1965-01-09', 'Rua das Flores, 751, São Paulo, SP', 'M', 30000, 33344555587, 5),
+(33344555587, 'Fernando', 'T', 'Wong', '1955-12-08', 'Rua da Lapa, 34, São Paulo, SP', 'M', 40000, 88866555576, 5),
+(99988777767, 'Alice', 'J', 'Zelaya', '1968-01-19', 'Rua Souza Lima, 35, Curitiba, PR', 'F', 25000, 98765432168, 4),
+(98765432168, 'Jennifer', 'S', 'Souza', '1941-06-20', 'Av. Arthur de Lima, 54, Santo André, SP', 'F', 43000, 88866555576, 4),
+(66688444476, 'Ronaldo', 'K', 'Lima', '1962-09-15', 'Rua Rebouças, 65, Piracicaba, SP', 'M', 38000, 33344555587, 5),
+(45345345376, 'Joice', 'A', 'Leite', '1972-07-31', 'Av. Lucas Obes, 74, São Paulo, SP', 'F', 25000, 33344555587, 5),
+(98798798733, 'André', 'V', 'Pereira', '1969-03-29', 'Rua Timbira, 35, São Paulo, SP', 'M', 25000, 98765432168, 4),
+(88866555576, 'Jorge', 'E', 'Brito', '1937-11-10', 'Rua do Horto, 35, São Paulo, SP', 'M', 55000, 88866555576, 1);
+
+INSERT INTO departamento VALUES
+(5, 'Pesqusia', 33344555587, '1988-05-22'), 
+(4, 'Administração', 98765432168, '1995-01-01'),
+(1, 'Matriz', 88866555576, '1981-06-19');
+
+INSERT INTO localizacoes_departamento VALUES
+(1, 'São Paulo'), 
+(4, 'Mauá'), 
+(5, 'Santo André'), 
+(5, 'Itu'), 
+(5, 'São Paulo'); 
+
+INSERT INTO projeto VALUES
+(1, 'ProdutoX', 'Santo André', 5), 
+(2, 'ProdutoY', 'Itu', 5), 
+(3, 'ProdutoZ', 'São Paulo', 5), 
+(10, 'Informatização', 'Mauá', 4), 
+(20, 'Reorganiazãço', 'São Paulo', 1), 
+(30, 'Novosbenefícios', 'Mauá', 4); 
+
+INSERT INTO dependente VALUES
+(33344555587, 'Alicia', 'F', '1986-04-05', 'Filha'), 
+(33344555587, 'Tiago', 'M', '1983-10-25', 'Filho'), 
+(33344555587, 'Janaína', 'F', '1958-05-03', 'Esposa'), 
+(98765432168, 'Antonio', 'M', '1942-02-28', 'Marido'), 
+(12345678966, 'Michael', 'M', '1988-01-04', 'Filho'), 
+(12345678966, 'Alicia', 'F', '1988-12-30', 'Filha'), 
+(12345678966, 'Elizabeth', 'F', '1967-05-05', 'Esposa'); 
+
+INSERT INTO trabalha_em VALUES
+(12345678966, 1, 32.5), 
+(12345678966, 2, 7.5), 
+(66688444476, 3, 40), 
+(45345345376, 1, 20), 
+(45345345376, 2, 20), 
+(33344555587, 2, 10), 
+(33344555587, 3, 10), 
+(33344555587, 10, 10), 
+(33344555587, 20, 10), 
+(99988777767, 30, 30), 
+(99988777767, 10, 10), 
+(98798798733, 10, 35), 
+(98798798733, 30, 5), 
+(98765432168, 30, 20), 
+(98765432168, 20, 15), 
+(88866555576, 20, 0); 
+
+-- Esse foi o meu script do PostgreSQL.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
