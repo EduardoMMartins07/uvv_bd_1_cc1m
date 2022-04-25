@@ -1,0 +1,243 @@
+/* Entrei pelo DBeaver no MariaDB com o login: Root e senha: computacao@raiz.
+Depois abri o console e comecei criando um usuário com o seguinte comando:*/
+
+CREATE USER 'eduardo'@'localhost' IDENTIFIED BY '123456';
+
+-- Depois dei todos os privilégios a ele com o seguinte comando:
+-- OBS: DEPOIS DE DAR "RUN" NO ULTIMO CÓDIGO PELO BOTÃO AMARELO, EU APAGUEI AQUELE COMANDO LOGO QUE ELE JÁ FOI RODADO. FIZ ISSO EM TODOS OS PRÓXIMOS CÓDIGOS.
+
+GRANT ALL PRIVILEGES ON *.* TO 'eduardo'@'localhost' WITH GRANT OPTION;
+
+/* Fui fazendo o mesmo passo a passo do PostgreSQL, então sai do DBeaver e entrei novamente no MariaDB mas logando com o novo usuário.
+E assim criei o banco de dados "uvv" com o seguinte código:*/
+
+CREATE DATABASE uvv;
+
+-- Logo em seguida usei esse banco de dados e criei as tabelas com o script gerado no SQL Power Architect usando os seguintes códigos:
+
+USE uvv;
+
+-- Fiz também os comentários semelhante ao que fiz no PostgreSQL 
+
+CREATE TABLE funcionario ( 
+                cpf CHAR(11) NOT NULL, 
+                primeiro_nome VARCHAR(15) NOT NULL, 
+                nome_meio CHAR(1), 
+                ultimo_nome VARCHAR(15) NOT NULL, 
+                data_nascimento DATE, 
+                endereco VARCHAR(99), 
+                sexo CHAR(1), 
+                salario DECIMAL(10,2), 
+                cpf_supervisor CHAR(11) NOT NULL, 
+                numero_departamento INT NOT NULL, 
+                PRIMARY KEY (cpf) 
+);
+
+-- OBS: QUANDO FUI INSERIR OS DADOS A QUANTIDADE DE CARACTERES EM ENDEREÇO NÃO FORAM SUFICIENTES, ENTÃO DE 30 COLOQUEI 99.
+/* OBS: SE EU COLOCASSE TODOS OS COMANDOS "CREATE TABLE" E TERMINASSE USANDO ";" PARA CADA "CREATE TABLE" E COLOCANDO TODAS DE VEZ NÃO FUNCIONOU,
+ENTÃO EU FUI INDO COMANDO POR COMANDO, "CREATE TABLE ...;" DAVA RUN, APAGAVA, CRIAVA A PRÓXIMA TABELA E DAVA RUN NOVAMENTE.
+NESSA MESMA LINHA DE RACIOCÍNIO COLOCAVA O ";" ACABOU AQUELA PARTE E FAZIA O PRÓXIMO CÓDIGO, FIZ ISSO PARA TODOS OS PRÓXIMOS CÓDIGOS. */
+
+CREATE TABLE departamento (
+                numero_departamento INT NOT NULL,
+                nome_departamento VARCHAR(15) NOT NULL,
+                cpf_gerente CHAR(11) NOT NULL,
+                data_inicio_gerente DATE,
+                PRIMARY KEY (numero_departamento)
+);
+
+CREATE UNIQUE INDEX departamento_idx
+ ON departamento
+ ( nome_departamento );
+
+
+CREATE TABLE localizacoes_departamento (
+                numero_departamento INT NOT NULL,
+                local VARCHAR(15) NOT NULL,
+                PRIMARY KEY (numero_departamento, local)
+);
+
+
+CREATE TABLE projeto (
+                numero_projeto INT NOT NULL,
+                nome_projeto VARCHAR(15) NOT NULL,
+                local_projeto VARCHAR(15),
+                numero_departamento INT NOT NULL,
+                PRIMARY KEY (numero_projeto)
+);
+
+CREATE UNIQUE INDEX projeto_idx
+ ON projeto
+ ( nome_projeto );
+
+
+CREATE TABLE dependente (
+                cpf_funcionario CHAR(11) NOT NULL,
+                nome_dependente VARCHAR(15) NOT NULL,
+                sexo CHAR(1),
+                data_nascimento DATE,
+                parentesco VARCHAR(15),
+                PRIMARY KEY (cpf_funcionario, nome_dependente)
+);
+
+
+CREATE TABLE trabalha_em (
+                cpf_funcionario CHAR(11) NOT NULL,
+                numero_projeto INT NOT NULL,
+                horas DECIMAL(3,1) NOT NULL,
+                PRIMARY KEY (cpf_funcionario, numero_projeto)
+);
+
+
+-- E logo em seguida fiz as relações com os seguintes códigos:
+
+ALTER TABLE dependente ADD CONSTRAINT funcionario_dependente_fk
+FOREIGN KEY (cpf_funcionario)
+REFERENCES funcionario (cpf)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE funcionario ADD CONSTRAINT funcionario_funcionario_fk
+FOREIGN KEY (cpf_supervisor)
+REFERENCES funcionario (cpf)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE departamento ADD CONSTRAINT funcionario_departamento_fk
+FOREIGN KEY (cpf_gerente)
+REFERENCES funcionario (cpf)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE trabalha_em ADD CONSTRAINT funcionario_trabalha_em_fk
+FOREIGN KEY (cpf_funcionario)
+REFERENCES funcionario (cpf)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE localizacoes_departamento ADD CONSTRAINT departamento_localizacoes_departamento_fk
+FOREIGN KEY (numero_departamento)
+REFERENCES departamento (numero_departamento)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE projeto ADD CONSTRAINT departamento_projeto_fk
+FOREIGN KEY (numero_departamento)
+REFERENCES departamento (numero_departamento)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE trabalha_em ADD CONSTRAINT projeto_trabalha_em_fk
+FOREIGN KEY (numero_projeto)
+REFERENCES projeto (numero_projeto)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+-- Depois adicionei os dados das tabelas com os seguintes códigos:
+/* OBS: EU TIVE QUE COLOCAR EM UMA DDETERMINADA ORDEM OS VALORES, POIS SE NÃO FOSSE ASSIM NÃO FUNCIONARIO POR DAR ERRO.
+BASICAMENTE EU ADICIONEI OS FUNCIONÁRIOS DE MAIOR IMPORTÂNCIO PRIMEIRO, POIS O CPF DELES DEPENDIAM PARA OUTROS FUNCIONÁRIOS.*/
+
+INSERT INTO funcionario VALUES
+(88866555576, 'Jorge', 'E', 'Brito', '1937-11-10', 'Rua do Horto, 35, São Paulo, SP', 'M', 55000, 88866555576, 1), 
+(33344555587, 'Fernando', 'T', 'Wong', '1955-12-08', 'Rua da Lapa, 34, São Paulo, SP', 'M', 40000, 88866555576, 5), 
+(98765432168, 'Jennifer', 'S', 'Souza', '1941-06-20', 'Av. Arthur de Lima, 54, Santo André, SP', 'F', 43000, 88866555576, 4), 
+(12345678966, 'João', 'B', 'Silva', '1965-01-09', 'Rua das Flores, 751, São Paulo, SP', 'M', 30000, 33344555587, 5), 
+(66688444476, 'Ronaldo', 'K', 'Lima', '1962-09-15', 'Rua Rebouças, 65, Piracicaba, SP', 'M', 38000, 33344555587, 5), 
+(45345345376, 'Joice', 'A', 'Leite', '1972-07-31', 'Av. Lucas Obes, 74, São Paulo, SP', 'F', 25000, 33344555587, 5), 
+(99988777767, 'Alice', 'J', 'Zelaya', '1968-01-19', 'Rua Souza Lima, 35, Curitiba, PR', 'F', 25000, 98765432168, 4), 
+(98798798733, 'André', 'V', 'Pereira', '1969-03-29', 'Rua Timbira, 35, São Paulo, SP', 'M', 25000, 98765432168, 4); 
+
+-- OBS: AQUI FIZ A MESMA LINHA DE RACIOCÍNIO DO QUE NA TABELA funcionario.
+
+INSERT INTO departamento VALUES
+(1, 'Matriz', 88866555576, '1981-06-19'), 
+(5, 'Pesqusia', 33344555587, '1988-05-22'), 
+(4, 'Administração', 98765432168, '1995-01-01'); 
+
+INSERT INTO localizacoes_departamento VALUES
+(1, 'São Paulo'), 
+(4, 'Mauá'), 
+(5, 'Santo André'), 
+(5, 'Itu'), 
+(5, 'São Paulo'); 
+
+INSERT INTO projeto VALUES
+(1, 'ProdutoX', 'Santo André', 5), 
+(2, 'ProdutoY', 'Itu', 5), 
+(3, 'ProdutoZ', 'São Paulo', 5), 
+(10, 'Informatização', 'Mauá', 4), 
+(20, 'Reorganiazãço', 'São Paulo', 1), 
+(30, 'Novosbenefícios', 'Mauá', 4); 
+
+INSERT INTO dependente VALUES
+(33344555587, 'Alicia', 'F', '1986-04-05', 'Filha'), 
+(33344555587, 'Tiago', 'M', '1983-10-25', 'Filho'), 
+(33344555587, 'Janaína', 'F', '1958-05-03', 'Esposa'), 
+(98765432168, 'Antonio', 'M', '1942-02-28', 'Marido'), 
+(12345678966, 'Michael', 'M', '1988-01-04', 'Filho'), 
+(12345678966, 'Alicia', 'F', '1988-12-30', 'Filha'), 
+(12345678966, 'Elizabeth', 'F', '1967-05-05', 'Esposa'); 
+
+INSERT INTO trabalha_em VALUES
+(12345678966, 1, 32.5), 
+(12345678966, 2, 7.5), 
+(66688444476, 3, 40), 
+(45345345376, 1, 20), 
+(45345345376, 2, 20), 
+(33344555587, 2, 10), 
+(33344555587, 3, 10), 
+(33344555587, 10, 10), 
+(33344555587, 20, 10), 
+(99988777767, 30, 30), 
+(99988777767, 10, 10), 
+(98798798733, 10, 35), 
+(98798798733, 30, 5), 
+(98765432168, 30, 20), 
+(98765432168, 20, 15), 
+(88866555576, 20, 0); 
+
+-- OBS: NESSA ULTIMA TUPLA DA COLUNA trabalha_em, COLOQUEI "0" HORAS POR SER UM VALOR NULO
+
+-- Por ultimo, fui colocar os comentários de cada tabela e coluna
+
+ALTER TABLE uvv.funcionario COMMENT='Essa tabela mostra os dados de cada funcionário da empresa.';
+ALTER TABLE funcionario MODIFY COLUMN cpf CHAR(11) COMMENT 'Essa coluna mostra o CPF de cada funcionário da empresa, sendo ela PK.';
+ALTER TABLE funcionario MODIFY COLUMN primeiro_nome VARCHAR(15) COMMENT 'Essa coluna mostra o primeiro nome do funcionário, ela não pode ser nula.';
+ALTER TABLE funcionario MODIFY COLUMN nome_meio CHAR(1) COMMENT 'Essa coluna mostra a inicial do nome do meio do funcionário.';
+ALTER TABLE funcionario MODIFY COLUMN ultimo_nome VARCHAR(15) COMMENT 'Essa coluna mostra o ultimo nome do funcionário, ela não pode ser nula.';
+ALTER TABLE funcionario MODIFY COLUMN data_nascimento DATE COMMENT 'Essa coluna mostra a data de nascimento do funcionário.';
+ALTER TABLE funcionario MODIFY COLUMN endereco VARCHAR(99) COMMENT 'Essa coluna mostra o endereço do funcionário.';
+ALTER TABLE funcionario MODIFY COLUMN sexo CHAR(1) COMMENT 'Essa coluna mostra o sexo do funcionário, somente M ou F.';
+ALTER TABLE funcionario MODIFY COLUMN salario DECIMAL(10, 2) COMMENT 'Essa coluna mostra o salário do funcionário.';
+ALTER TABLE funcionario MODIFY COLUMN cpf_supervisor CHAR(11) COMMENT 'Essa coluna mostra o CPF do supervisor desse funcionário, sendo ela uma FK de elmasri.funcionario.cpf.';
+ALTER TABLE funcionario MODIFY COLUMN numero_departamento INTEGER COMMENT 'Essa coluna mostra o nome do departamento que o funcionário trabalha, não pode ser nula.';
+
+ALTER TABLE uvv.departamento COMMENT='Essa é a tabela a qual possui as informações sobre os departamentos de uma empresa hipotética.';
+ALTER TABLE departamento MODIFY COLUMN numero_departamento INTEGER COMMENT 'Nessa coluna há os números de cada departamento nessa empresa, sendo também a PK, chave primária, dessa respectiva tabela.';
+ALTER TABLE departamento MODIFY COLUMN nome_departamento VARCHAR(15) COMMENT 'Nessa coluna há os nomes de cada departamento, sendo também uma AK, chave única.';
+ALTER TABLE departamento MODIFY COLUMN cpf_gerente CHAR(11) COMMENT 'Nessa coluna há o cpf do gerente de cada departamento, sendo também uma FK, chave estrangeira, de funcionario.cpf.';
+ALTER TABLE departamento MODIFY COLUMN data_inicio_gerente DATE COMMENT 'Nessa coluna há a data do início da gerencia do atual gerente de seu departamento.';
+
+ALTER TABLE uvv.localizacoes_departamento COMMENT='Essa tabela mostra de maneira mais prática onde está situado cada departamento.';
+ALTER TABLE localizacoes_departamento MODIFY COLUMN numero_departamento INTEGER COMMENT 'Essa coluna mostra a o número de cada departamento, sendo uma PFK, uma chave primária que é estrangeira de outra tabela.';
+ALTER TABLE localizacoes_departamento MODIFY COLUMN local VARCHAR(15) COMMENT 'Essa coluna mostra o local que está situado cada departamento, sendo uma PK.';
+
+ALTER TABLE uvv.projeto COMMENT='Essa tabela mostra os dados referentes aos projetos de cada departamento.';
+ALTER TABLE projeto MODIFY COLUMN numero_projeto INTEGER COMMENT 'Essa coluna mostra o número de cada projeto referente a tal departamento, sendo também uma PK.';
+ALTER TABLE projeto MODIFY COLUMN nome_projeto VARCHAR(15) COMMENT 'Essa coluna mostra o nome de cada projeto referente ao seu número, sendo também uma AK.';
+ALTER TABLE projeto MODIFY COLUMN local_projeto VARCHAR(15) COMMENT 'Essa coluna mostra onde que está situada cada projeto.';
+ALTER TABLE projeto MODIFY COLUMN numero_departamento INTEGER COMMENT 'Essa coluna mostra qual departamento está relacionado esse projeto, sendo também uma FK.';
+
+ALTER TABLE uvv.dependente COMMENT='Essa tabela mostra os dependentes de cada funcionário e alguns dados sobre eles.';
+ALTER TABLE dependente MODIFY COLUMN cpf_funcionario CHAR(11) COMMENT 'Essa coluna mostra o CPF do funcionário, sendo ela uma PFK de elmasri.funcionario.';
+ALTER TABLE dependente MODIFY COLUMN nome_dependente VARCHAR(15) COMMENT 'Essa coluna mostra o nome do dependente do funcionário, sendo ela uma PK.';
+ALTER TABLE dependente MODIFY COLUMN sexo CHAR(1) COMMENT 'Essa coluna mostra o sexo do dependente do funcionário, sendo M ou F.';
+ALTER TABLE dependente MODIFY COLUMN data_nascimento DATE COMMENT 'Essa coluna mostra a data de nascimento do dependente do funcionário.';
+ALTER TABLE dependente MODIFY COLUMN parentesco VARCHAR(15) COMMENT 'Essa coluna mostra o grau de parentesco que o dependente tem com o funcionário.';
+
+ALTER TABLE uvv.trabalha_em COMMENT='Essa tabela mostra em qual projeto cada funcionário trabalha.';
+ALTER TABLE trabalha_em MODIFY COLUMN cpf_funcionario CHAR(11) COMMENT 'Essa coluna mostra o CPF do funcionário, sendo ela uma PFK de elmasri.funcionario.';
+ALTER TABLE trabalha_em MODIFY COLUMN numero_projeto INTEGER COMMENT 'Essa coluna mostra o número do projeto em que o funcionário trabalha, sendo ela uma PFK de elmasri.projeto.';
+ALTER TABLE trabalha_em MODIFY COLUMN horas DECIMAL(3,1) COMMENT 'Essa coluna mostra o número de horas trabalhadas por funcioário, não pode ser nula.';
+
+-- Esse foi o meu script do MariaDB.
