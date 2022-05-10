@@ -242,7 +242,8 @@ deve estar ordenado pela idade em anos completos, de forma decrescente.
 ![relatorio1](imgs/relatorio13.jpg)
 ___
 
-QUESTÃO 14: prepare um relatório que exiba quantos funcionários cada departamento tem.
+### QUESTÃO 14: 
+Prepare um relatório que exiba quantos funcionários cada departamento tem.
 
 	SELECT nome_departamento,
 		COUNT(funcionario.cpf) AS numero_funcionario
@@ -254,14 +255,15 @@ QUESTÃO 14: prepare um relatório que exiba quantos funcionários cada departam
 ![relatorio1](imgs/relatorio14.jpg)
 ___
 
-QUESTÃO 15: como um funcionário pode estar alocado em mais de um projeto,
+### QUESTÃO 15: 
+Como um funcionário pode estar alocado em mais de um projeto,
 prepare um relatório que exiba o nome completo do funcionário, o departamento
 desse funcionário e o nome dos projetos em que cada funcionário está alocado.
 Atenção: se houver algum funcionário que não está alocado em nenhum projeto,
 o nome completo e o departamento também devem aparecer no relatório.
 
-OBS: Como não existe nenhum funcionário sem projeto no banco de dados do Elmasri, adicionei um funcionário 
-na tabela funcionario e não coloquei ele em nenhum projeto, logo não está na tabela trabalha_em 
+***OBS: Como não existe nenhum funcionário sem projeto no banco de dados do Elmasri, adicionei um funcionário 
+na tabela funcionario e não coloquei ele em nenhum projeto, logo não está na tabela trabalha_em***
 
 	INSERT INTO elmasri.funcionario VALUES
 	(11122233344, 'Eduardo', 'M', 'Martins', '2003-04-04', 'Rua Floriano Kiefer, 41, Vila Velha, ES', 'M', 20000, 88866555576, 1);
