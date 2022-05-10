@@ -7,7 +7,7 @@
 ### Professor: Abrantes Araújo Silva Filho
 
 ### Monitora: Suellen Miranda Amorim
-
+___
 
 O subdiretório "pset1" é referente ao 1° pset desenvolvido.
 
