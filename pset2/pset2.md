@@ -262,13 +262,13 @@ desse funcionário e o nome dos projetos em que cada funcionário está alocado.
 Atenção: se houver algum funcionário que não está alocado em nenhum projeto,
 o nome completo e o departamento também devem aparecer no relatório.
 
-***OBS: Como não existe nenhum funcionário sem projeto no banco de dados do Elmasri, adicionei um funcionário 
-na tabela funcionario e não coloquei ele em nenhum projeto, logo não está na tabela trabalha_em***
+**OBS: Como não existe nenhum funcionário sem projeto no banco de dados do Elmasri, adicionei um funcionário 
+na tabela funcionario e não coloquei ele em nenhum projeto, logo não está na tabela trabalha_em.**
 
 	INSERT INTO elmasri.funcionario VALUES
 	(11122233344, 'Eduardo', 'M', 'Martins', '2003-04-04', 'Rua Floriano Kiefer, 41, Vila Velha, ES', 'M', 20000, 88866555576, 1);
 
-Agora existe um funcionário que não está alocado em nenhum projeto 
+Agora existe um funcionário que não está alocado em nenhum projeto.
 
 	SELECT CONCAT(primeiro_nome, ' ', nome_meio, ' ', ultimo_nome) AS nome_completo,
 		nome_departamento,
