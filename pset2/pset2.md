@@ -230,9 +230,7 @@ o nome do projeto e a soma total das horas.
 	;
 
 > Selecionei (SELECT) as colunas desejadas, aqui usei "SUM" para fazer o 
-somatório das horas, e também cometi um erro de gramática que ao inveés de
-colocar "total_horas" coloquei "toal_horas" e só percebi no momento de fazer 
-esta documentação, e de onde (FROM) elas são, com duas condições (WHERE) 
+somatório das horas e de onde (FROM) elas são, com duas condições (WHERE) 
 para não repetir os dados, agrupei (GROUP BY) pelo nome do departamento e do 
 projeto para que em cada projeto de cada departamento calculasse o total de
 horas que foram trabalhadas e documentadas e ordenei (ORDER BY) pelo nome 
