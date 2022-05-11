@@ -15,6 +15,9 @@ ___
 Prepare um relatório que mostre a média salarial dos funcionários
 de cada departamento.
 
+> Sempre após ler o que a questão pede, eu mentalizo como deve ficar a
+tabela e depois os caminhos que me levam até o resultado esperado. 
+
 	SELECT nome_departamento,
 		AVG(salario) AS media_salarial
 	FROM departamento, funcionario
@@ -23,8 +26,15 @@ de cada departamento.
 	ORDER BY nome_departamento
 	;
 
- ![relatorio1](imgs/relatorio1.jpg) 
-___
+> Selecionei (SELECT) quais colunas eu quero e de onde (FROM) elas 
+estão originalmente, coloquei uma condição (WHERE) para que não 
+duplicasse os dados, agrupei (GROUP BY) pelo nome do departamento para 
+cada nome_departamento distinto que existe me retornasse a sua 
+respectiva média salárial e ordernei (ORDER BY) pelo 
+nome_departamento para ficasse em ordem alfabética.
+
+ ![relatorio1](imgs/relatorio1.jpg)  
+ 
 
 ### QUESTÃO 02: 
 Prepare um relatório que mostre a média salarial dos homens e das
@@ -34,6 +44,11 @@ mulheres.
 	FROM funcionario
 	GROUP BY funcionario.sexo
 	;
+
+> Selecionei (SELECT) as colunas que eu gostaria que aparecessem e de 
+onde (FROM) elas estão originalmente, nesse caso uma única tabela, e 
+agrupei (GROUB BY) pelo sexo para que cada sexo distinto tenha uma 
+média salarial.
 
 ![relatorio1](imgs/relatorio2.jpg)
 ___
@@ -53,7 +68,14 @@ completo, a data de nascimento, a idade em anos completos e o salário.
 	ORDER BY nome_departamento, 
 		nome_completo
 	;
-	
+
+> Selecionei (SELECT) as colunas que eu gostaria que aparecessem, nessa
+questão tive que pesquisar o "CONCAT" para juntar colunas em uma só e
+o "EXTRACT", que foi mais difícil de achar, para calcular a idade e de
+onde elas estão originalmente, com uma condição (WHERE) para não 
+duplicar os itens e ordenei (ORDER BY) em ordem alfabética, primeiro 
+o departamento e depois o nome do funcionário em hierárquia.
+
 ![relatorio1](imgs/relatorio3.jpg)
 ___
 
@@ -72,6 +94,11 @@ do funcionário for igual ou superior a 35.000 o reajuste deve ser de 15%.
 	FROM funcionario
 	ORDER BY nome_completo
 	;
+
+> Selecionei (SELECT) as colunas necessárias, aqui usei "CASE" para 
+fazer os cálculos e ele funciona semelhante ao "IF" e "ELSE" do JS,
+e de onde estavam as colunas originalmente e ordenei  (ORDER BY) em 
+ordem alfabética pelo nome.
 
 ![relatorio1](imgs/relatorio4.jpg)
 ___
