@@ -182,11 +182,12 @@ com duas condições (WHERE) para não duplicar e pegar somente os dados
 solcitados e ordenei (ORDER BY), alfabéticamente, pelo nome do departamento 
 e pelo maior para o menor salário.
 
+![relatorio1](imgs/relatorio7.jpg)
+
 > Encontrei uma tabela na internet explicando os joins por diagramas e mostrando 
 um script para cada join.
 
-
-![relatorio1](imgs/relatorio7.jpg)
+![Tabela-joins](imgs/JOIN-DIAGRAMA.png)
 ___
 
 ### QUESTÃO 08: 
@@ -220,7 +221,7 @@ o nome do projeto e a soma total das horas.
 
 	SELECT nome_departamento,
 		nome_projeto,
-		SUM(horas) AS toal_horas
+		SUM(horas) AS total_horas
 	FROM departamento, projeto, trabalha_em 
 	WHERE departamento.numero_departamento = projeto.numero_departamento
 		AND projeto.numero_projeto = trabalha_em.numero_projeto
