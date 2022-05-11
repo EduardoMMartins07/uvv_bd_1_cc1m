@@ -119,6 +119,15 @@ nome do departamento (em ordem crescente) e por salário dos funcionários (em o
 	ORDER BY nome_departamento, 
 		salario DESC
 	;
+
+> Selecionei (SELECT) as colunas necessárias, como nessa questão pedia 
+para identificar se a pessoa era gerente ou não, criei uma nova coluna
+chamada "cargo" a qual se o cpf da pessoa estivesse na tabela departamento 
+como gerente então ela seria gerente em cargo, se não funcionário, e de 
+onde (FROM) elas estavam originalmente, com a condição (WHERE) para não 
+duplicar os dados e ordenei (ORDER BY) alfabética pelo nome e o salário 
+em ordem decrescente.
+
 ![relatorio1](imgs/relatorio5.jpg)
 ___
 
@@ -143,6 +152,12 @@ como “Masculino” ou “Feminino”).
 		AND funcionario.numero_departamento = departamento.numero_departamento
 	ORDER BY nome_departamento, nome_completo, idade DESC
 	;
+
+> Selecionei (SELECT) as colunas necessárias e de onde (FROM) elas estavam
+originalmente, com duas condições (WHERE) para não duplicar os dados e
+ordedei (ORDER BY) alfabéticamente pelo nome do departamento, nome da 
+pessoa e pela idade decrescente.
+
 ![relatorio1](imgs/relatorio6.jpg)
 ___
 
@@ -160,6 +175,14 @@ TEM dependente, seu nome completo, departamento e salário.
 		AND funcionario.numero_departamento = departamento.numero_departamento
 	ORDER BY nome_departamento, salario DESC
 	;
+
+> Selecionei (SELECT) as colunas solicitadas e de onde elas estavam originalmente,
+e fiz uma junção com outra tabela para pegar parte dos dados dela (LEFT JOIN), 
+com duas condições (WHERE) para não duplicar e pegar somente os dados 
+solcitados e ordenei (ORDER BY), alfabéticamente, pelo nome do departamento 
+e pelo maior para o menor salário.
+
+
 ![relatorio1](imgs/relatorio7.jpg)
 ___
 
@@ -178,6 +201,12 @@ número de horas trabalhadas por cada funcionário, em cada projeto.
 		AND projeto.numero_projeto = trabalha_em.numero_projeto
 	ORDER BY nome_departamento, nome_projeto
 	;
+
+> Selecionei (SELECT) as colunas solicitadas e de onde (FROM) elas são 
+originalmente, com 3 condições (WHERE) para que não duplicasse os dados 
+e que desse o resultado desejado e ordenei (ORDER BY) pelo nome do departamento 
+e o nome do projeto, alfabéticamente.
+
 ![relatorio1](imgs/relatorio8.jpg)
 ___
 
@@ -195,6 +224,16 @@ o nome do projeto e a soma total das horas.
 	GROUP BY nome_departamento, nome_projeto 
 	ORDER BY nome_departamento
 	;
+
+> Selecionei (SELECT) as colunas desejadas, aqui usei "SUM" para fazer o 
+somatório das horas, e também cometi um erro de gramática que ao inveés de
+colocar "total_horas" coloquei "toal_horas" e só percebi no momento de fazer 
+esta documentação, e de onde (FROM) elas são, com duas condições (WHERE) 
+para não repetir os dados, agrupei (GROUP BY) pelo nome do departamento e do 
+projeto para que em cada projeto de cada departamento calculasse o total de
+horas que foram trabalhadas e documentadas e ordenei (ORDER BY) pelo nome 
+do departamento.
+
 ![relatorio1](imgs/relatorio9.jpg)
 ___
 
@@ -209,6 +248,10 @@ de cada departamento.
 	GROUP BY nome_departamento
 	ORDER BY nome_departamento
 	;
+
+> Percebi que essa questão é idêntica a 1° questão então fiz exatamente 
+o mesmo procedimento.
+
 ![relatorio1](imgs/relatorio10.jpg)
 ___
 
@@ -225,6 +268,14 @@ e o valor total que o funcionário receberá referente às horas trabalhadas naq
 		AND funcionario.cpf = trabalha_em.cpf_funcionario 
 	ORDER BY nome_projeto
 	;
+
+> Selecionei (SELECT) as colunas solicitadas, as quais em uma multipliquei os dados 
+da coluna trabalha_em.horas por 50, para que estimasse quanto seria o 
+salario de cada funcionário em cada projeto considerando que por 1 hora
+trabalhada ganhasse R$50,00 e apelidei essa coluna de "salario_50_por_h",
+de onde estavam originalmente, com duas condições (WHERE) para não repetisse os 
+dados e ordenei (ORDER BY) pelo nome do projeto.
+
 ![relatorio1](imgs/relatorio11.jpg)
 ___
 
@@ -246,6 +297,12 @@ estando alocados a algum projeto, não registraram nenhuma hora trabalhada.
 		AND trabalha_em.horas = 0 
 	GROUP BY nome_completo, nome_departamento, nome_projeto
 	;
+
+> Selecionei (SELECT) as colunas necessárias e de onde (FROM) elas são, 
+com 5 condições (WHERE) distintas para não repetir os dados e retornasse o resultado 
+desejado e agrupei (GROUP BY) pelo nome, nome do departamento e o nome 
+do projeto a fim de dar o resultado desejado.
+
 ![relatorio1](imgs/relatorio12.jpg)
 ___
 
@@ -268,6 +325,16 @@ deve estar ordenado pela idade em anos completos, de forma decrescente.
 	FROM dependente 
 	ORDER BY idade DESC
 	;
+
+> Como em uma única busca não conseguiria chegar no resultado, tive que
+unir duas tabelas com todos os resultados (UNION ALL) para não deixar 
+nenhuma pessoa de fora. Inicialmente selecionei (SELECT) as colunas 
+necessárias, dos funcionários, e de onde elas são (FROM) e uni com 
+as colunas selecionadas (SELECT) dos dependentes e de onde elas são 
+(FROM) e ordenei (ORDER BY) pela idade de forma decrescente. 
+OBS: todas as colunas do 1° e do 2° "SELECT" tiveram os mesmos apelidos 
+para não dar conflito.
+
 ![relatorio1](imgs/relatorio13.jpg)
 ___
 
@@ -281,6 +348,13 @@ Prepare um relatório que exiba quantos funcionários cada departamento tem.
 	GROUP BY departamento.numero_departamento
 	ORDER BY nome_departamento
 	;
+
+> Selecionei (SELECT) nas colunas solicitadas, a qual uma usei "COUNT" 
+para somar o número de funcionários em cada departamento, e de onde 
+eram (FROM) essas colunas e dados originalmente, agrupei (GROUP BY) pelo 
+nome do departamento a fim de cada departamento distinto fizesse a soma
+dos funcionários alucados neles e ordenei (ORDER BY) pelo nome do departamento.
+
 ![relatorio1](imgs/relatorio14.jpg)
 ___
 
@@ -291,13 +365,14 @@ desse funcionário e o nome dos projetos em que cada funcionário está alocado.
 Atenção: se houver algum funcionário que não está alocado em nenhum projeto,
 o nome completo e o departamento também devem aparecer no relatório.
 
-**OBS: Como não existe nenhum funcionário sem projeto no banco de dados do Elmasri, adicionei um funcionário 
+> **OBS: Como não existe nenhum funcionário sem projeto no banco de dados do Elmasri, adicionei um funcionário 
 na tabela funcionario e não coloquei ele em nenhum projeto, logo não está na tabela trabalha_em.**
 
 	INSERT INTO elmasri.funcionario VALUES
 	(11122233344, 'Eduardo', 'M', 'Martins', '2003-04-04', 'Rua Floriano Kiefer, 41, Vila Velha, ES', 'M', 20000, 88866555576, 1);
 
-Agora existe um funcionário que não está alocado em nenhum projeto.
+> Após adicionar um funcionário sem projeto consigo provar e testar se o 
+script me retorna o que eu desejo.
 
 	SELECT CONCAT(primeiro_nome, ' ', nome_meio, ' ', ultimo_nome) AS nome_completo,
 		nome_departamento,
@@ -324,6 +399,8 @@ Agora existe um funcionário que não está alocado em nenhum projeto.
 	) 
 	ORDER BY nome_departamento, nome_completo, nome_projeto 
 	;
+> 
+
 ![relatorio1](imgs/relatorio15.jpg)
 ___
 Essas foram as minhas respostas desse pset.
