@@ -34,7 +34,7 @@ respectiva média salárial e ordernei (ORDER BY) pelo
 nome_departamento para ficasse em ordem alfabética.
 
  ![relatorio1](imgs/relatorio1.jpg)  
- 
+ ___
 
 ### QUESTÃO 02: 
 Prepare um relatório que mostre a média salarial dos homens e das
@@ -336,6 +336,12 @@ as colunas selecionadas (SELECT) dos dependentes e de onde elas são
 (FROM) e ordenei (ORDER BY) pela idade de forma decrescente. 
 OBS: todas as colunas do 1° e do 2° "SELECT" tiveram os mesmos apelidos 
 para não dar conflito.
+
+> Como na vida real o filho(a) pode ter os sobrenomes da mãe e do pai mas 
+também pode ter o sobrenome de só um dos dois, acabei optanto por deixar os 
+dependentes sem sobrenome, mas se fosse para colocar com eu utilizaria o "CONCAT" 
+e uniria o nome do dependente com o nome do meio e ultimo nome do funcionário ao qual 
+ele é dependente.
 
 ![relatorio1](imgs/relatorio13.jpg)
 ___
