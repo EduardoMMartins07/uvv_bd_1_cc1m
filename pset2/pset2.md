@@ -17,7 +17,8 @@ de cada departamento.
 
 > Sempre após ler o que a questão pede, eu mentalizo como deve ficar a
 tabela e depois os caminhos que me levam até o resultado esperado. 
-
+	
+~~~SQL
 	SELECT nome_departamento,
 		AVG(salario) AS media_salarial
 	FROM departamento, funcionario
@@ -25,6 +26,7 @@ tabela e depois os caminhos que me levam até o resultado esperado.
 	GROUP BY nome_departamento
 	ORDER BY nome_departamento
 	;
+~~~
 
 > Selecionei (SELECT) quais colunas eu quero e de onde (FROM) elas 
 estão originalmente, coloquei uma condição (WHERE) para que não 
@@ -40,10 +42,12 @@ nome_departamento para ficasse em ordem alfabética.
 Prepare um relatório que mostre a média salarial dos homens e das
 mulheres.
 
+~~~SQL
 	SELECT AVG(funcionario.salario) AS media_salarial, funcionario.sexo
 	FROM funcionario
 	GROUP BY funcionario.sexo
 	;
+~~~
 
 > Selecionei (SELECT) as colunas que eu gostaria que aparecessem e de 
 onde (FROM) elas estão originalmente, nesse caso uma única tabela, e 
@@ -58,6 +62,7 @@ Prepare um relatório que liste o nome dos departamentos e, para
 cada departamento, inclua as seguintes informações de seus funcionários: o nome
 completo, a data de nascimento, a idade em anos completos e o salário.
 
+~~~SQL
 	SELECT nome_departamento, 
 		CONCAT(primeiro_nome, ' ', nome_meio, ' ',  ultimo_nome) AS nome_completo, 
 		data_nascimento, 
@@ -68,6 +73,7 @@ completo, a data de nascimento, a idade em anos completos e o salário.
 	ORDER BY nome_departamento, 
 		nome_completo
 	;
+~~~
 
 > Selecionei (SELECT) as colunas que eu gostaria que aparecessem, nessa
 questão tive que pesquisar o "CONCAT" para juntar colunas em uma só e
@@ -85,6 +91,7 @@ o salário atual e o salário com um reajuste que obedece ao seguinte critério:
 atual do funcionário é inferior a 35.000 o reajuste deve ser de 20%, e se o salário atual 
 do funcionário for igual ou superior a 35.000 o reajuste deve ser de 15%.
 
+~~~SQL
 	SELECT CONCAT(primeiro_nome, ' ', nome_meio, ' ', ultimo_nome) AS nome_completo,
 		EXTRACT(YEAR FROM AGE(funcionario.data_nascimento)) AS idade,
 		salario,
@@ -94,6 +101,7 @@ do funcionário for igual ou superior a 35.000 o reajuste deve ser de 15%.
 	FROM funcionario
 	ORDER BY nome_completo
 	;
+~~~
 
 > Selecionei (SELECT) as colunas necessárias, aqui usei "CASE" para 
 fazer os cálculos e ele funciona semelhante ao "IF" e "ELSE" do JS,
@@ -108,6 +116,7 @@ Prepare um relatório que liste, para cada departamento, o nome
 do gerente e o nome dos funcionários. Ordene esse relatório por 
 nome do departamento (em ordem crescente) e por salário dos funcionários (em ordem decrescente).
 
+~~~SQL
 	SELECT nome_departamento, 
 		CASE WHEN funcionario.cpf = departamento.cpf_gerente THEN 'gerente'
 			ELSE 'funcionario'
@@ -119,6 +128,7 @@ nome do departamento (em ordem crescente) e por salário dos funcionários (em o
 	ORDER BY nome_departamento, 
 		salario DESC
 	;
+~~~
 
 > Selecionei (SELECT) as colunas necessárias, como nessa questão pedia 
 para identificar se a pessoa era gerente ou não, criei uma nova coluna
@@ -138,6 +148,7 @@ também liste o nome completo dos dependentes, a idade em anos de cada
 dependente e o sexo (o sexo NÃO DEVE aparecer como M ou F, deve aparecer
 como “Masculino” ou “Feminino”).
 
+~~~SQL
 	SELECT CASE WHEN funcionario.cpf = dependente.cpf_funcionario 
 			THEN concat(funcionario.primeiro_nome, ' ', funcionario.nome_meio, ' ', funcionario.ultimo_nome)
 		END AS nome_completo,
@@ -152,6 +163,7 @@ como “Masculino” ou “Feminino”).
 		AND funcionario.numero_departamento = departamento.numero_departamento
 	ORDER BY nome_departamento, nome_completo, idade DESC
 	;
+~~~
 
 > Selecionei (SELECT) as colunas necessárias e de onde (FROM) elas estavam
 originalmente, com duas condições (WHERE) para não duplicar os dados e
@@ -165,6 +177,7 @@ ___
 Prepare um relatório que mostre, para cada funcionário que NÃO
 TEM dependente, seu nome completo, departamento e salário.
 
+~~~SQL
 	SELECT CONCAT(primeiro_nome, ' ', nome_meio, ' ', ultimo_nome) AS nome_completo,
 		nome_departamento,
 		salario
@@ -175,6 +188,7 @@ TEM dependente, seu nome completo, departamento e salário.
 		AND funcionario.numero_departamento = departamento.numero_departamento
 	ORDER BY nome_departamento, salario DESC
 	;
+~~~
 
 > Selecionei (SELECT) as colunas solicitadas e de onde elas estavam originalmente,
 e fiz uma junção com outra tabela para pegar parte dos dados dela (LEFT JOIN), 
@@ -195,6 +209,7 @@ Prepare um relatório que mostre, para cada departamento, os projetos desse depa
 nome completo dos funcionários que estão alocados em cada projeto. Além disso inclua o
 número de horas trabalhadas por cada funcionário, em cada projeto.
 
+~~~SQL
 	SELECT nome_departamento,
 		nome_projeto,
 		CONCAT(primeiro_nome, ' ', nome_meio, ' ', ultimo_nome) AS nome_completo,
@@ -205,6 +220,7 @@ número de horas trabalhadas por cada funcionário, em cada projeto.
 		AND projeto.numero_projeto = trabalha_em.numero_projeto
 	ORDER BY nome_departamento, nome_projeto
 	;
+~~~
 
 > Selecionei (SELECT) as colunas solicitadas e de onde (FROM) elas são 
 originalmente, com 3 condições (WHERE) para que não duplicasse os dados 
@@ -219,6 +235,7 @@ Prepare um relatório que mostre a soma total das horas de cada
 projeto em cada departamento. Obs.: o relatório deve exibir o nome do departamento, 
 o nome do projeto e a soma total das horas.
 
+~~~SQL
 	SELECT nome_departamento,
 		nome_projeto,
 		SUM(horas) AS total_horas
@@ -228,6 +245,7 @@ o nome do projeto e a soma total das horas.
 	GROUP BY nome_departamento, nome_projeto 
 	ORDER BY nome_departamento
 	;
+~~~
 
 > Selecionei (SELECT) as colunas desejadas, aqui usei "SUM" para fazer o 
 somatório das horas e de onde (FROM) elas são, com duas condições (WHERE) 
@@ -243,6 +261,7 @@ ___
 Prepare um relatório que mostre a média salarial dos funcionários
 de cada departamento.
 
+~~~SQL
 	SELECT nome_departamento,
 		AVG(salario) AS media_salarial
 	FROM departamento, funcionario
@@ -250,6 +269,7 @@ de cada departamento.
 	GROUP BY nome_departamento
 	ORDER BY nome_departamento
 	;
+~~~
 
 > Percebi que essa questão é idêntica a 1° questão então fiz exatamente 
 o mesmo procedimento.
@@ -262,6 +282,7 @@ Considerando que o valor pago por hora trabalhada em um projeto é de 50 reais,
 prepare um relatório que mostre o nome completo do funcionário, o nome do projeto 
 e o valor total que o funcionário receberá referente às horas trabalhadas naquele projeto.
 
+~~~SQL
 	SELECT CONCAT(primeiro_nome, ' ', nome_meio, ' ', ultimo_nome) AS nome_completo,
 		nome_projeto,
 		horas*50 AS salario_50_por_h
@@ -270,6 +291,7 @@ e o valor total que o funcionário receberá referente às horas trabalhadas naq
 		AND funcionario.cpf = trabalha_em.cpf_funcionario 
 	ORDER BY nome_projeto
 	;
+~~~
 
 > Selecionei (SELECT) as colunas solicitadas, as quais em uma multipliquei os dados 
 da coluna trabalha_em.horas por 50, para que estimasse quanto seria o 
@@ -288,6 +310,7 @@ registraram nenhuma hora trabalhada. Sua tarefa é preparar um relatório que li
 o nome do departamento, o nome do projeto e o nome dos funcionários que, mesmo 
 estando alocados a algum projeto, não registraram nenhuma hora trabalhada.
 
+~~~SQL
 	SELECT nome_departamento,
 		nome_projeto,
 		CONCAT(primeiro_nome, ' ', nome_meio, ' ',ultimo_nome) AS nome_completo
@@ -299,6 +322,7 @@ estando alocados a algum projeto, não registraram nenhuma hora trabalhada.
 		AND trabalha_em.horas = 0 
 	GROUP BY nome_completo, nome_departamento, nome_projeto
 	;
+~~~
 
 > Selecionei (SELECT) as colunas necessárias e de onde (FROM) elas são, 
 com 5 condições (WHERE) distintas para não repetir os dados e retornasse o resultado 
@@ -316,6 +340,7 @@ que listasse o nome completo das pessoas a serem presenteadas (funcionários e d
 o sexo e a idade em anos completos (para poder comprar um presente adequado). Esse relatório
 deve estar ordenado pela idade em anos completos, de forma decrescente.
 
+~~~SQL
 	SELECT CONCAT(primeiro_nome, ' ', nome_meio, ' ', ultimo_nome) AS nome_completo,
 		sexo,
 		EXTRACT(YEAR FROM AGE(data_nascimento)) AS idade
@@ -327,6 +352,7 @@ deve estar ordenado pela idade em anos completos, de forma decrescente.
 	FROM dependente 
 	ORDER BY idade DESC
 	;
+~~~
 
 > Como em uma única busca não conseguiria chegar no resultado, tive que
 unir duas tabelas com todos os resultados (UNION ALL) para não deixar 
@@ -349,6 +375,7 @@ ___
 ### QUESTÃO 14: 
 Prepare um relatório que exiba quantos funcionários cada departamento tem.
 
+~~~SQL
 	SELECT nome_departamento,
 		COUNT(funcionario.cpf) AS numero_funcionario
 	FROM departamento, funcionario 
@@ -356,6 +383,7 @@ Prepare um relatório que exiba quantos funcionários cada departamento tem.
 	GROUP BY departamento.numero_departamento
 	ORDER BY nome_departamento
 	;
+~~~
 
 > Selecionei (SELECT) nas colunas solicitadas, a qual uma usei "COUNT" 
 para somar o número de funcionários em cada departamento, e de onde 
@@ -376,12 +404,15 @@ o nome completo e o departamento também devem aparecer no relatório.
 > **OBS: Como não existe nenhum funcionário sem projeto no banco de dados do Elmasri, adicionei um funcionário 
 na tabela funcionario e não coloquei ele em nenhum projeto, logo não está na tabela trabalha_em.**
 
+~~~SQL
 	INSERT INTO elmasri.funcionario VALUES
 	(11122233344, 'Eduardo', 'M', 'Martins', '2003-04-04', 'Rua Floriano Kiefer, 41, Vila Velha, ES', 'M', 20000, 88866555576, 1);
+~~~
 
 > Após adicionar um funcionário sem projeto consigo testar e provar se o 
 script me retorna o que eu desejo.
 
+~~~SQL
 	SELECT CONCAT(primeiro_nome, ' ', nome_meio, ' ', ultimo_nome) AS nome_completo,
 		nome_departamento,
 		nome_projeto
@@ -407,6 +438,8 @@ script me retorna o que eu desejo.
 	) 
 	ORDER BY nome_departamento, nome_completo, nome_projeto 
 	;
+~~~
+
 > O único caminho que encontrei foi selecionando (SELECT) as colunas com os dados
 dos funcionários que estão alocados em algum projeto e somando (UNION) com os que 
 não estão alocados em nenhum projeto. E a única forma que encontrei de selecionar
