@@ -343,7 +343,7 @@ para não dar conflito.
 também pode ter o sobrenome de só um dos dois, acabei optanto por deixar os 
 dependentes sem sobrenome, mas se fosse para colocar com eu utilizaria o "CONCAT" 
 e uniria o nome do dependente com o nome do meio e ultimo nome do funcionário ao qual 
-ele é dependente com um "JOIN".
+ele é dependente com um "JOIN" para fazer essa ligação.
 ___
 
 ### QUESTÃO 14: 
