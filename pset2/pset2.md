@@ -182,6 +182,9 @@ com duas condições (WHERE) para não duplicar e pegar somente os dados
 solcitados e ordenei (ORDER BY), alfabéticamente, pelo nome do departamento 
 e pelo maior para o menor salário.
 
+> Encontrei uma tabela na internet explicando os joins por diagramas e mostrando 
+um script para cada join.
+
 
 ![relatorio1](imgs/relatorio7.jpg)
 ___
@@ -399,7 +402,19 @@ script me retorna o que eu desejo.
 	) 
 	ORDER BY nome_departamento, nome_completo, nome_projeto 
 	;
-> 
+> O único caminho que encontrei foi selecionando (SELECT) as colunas com os dados
+dos funcionários que estão alocados em algum projeto e somando (UNION) com os que 
+não estão alocados em nenhum projeto. E a única forma que encontrei de selecionar
+somente os que não estão alocados em nenhum projeto foi usando a cláusula "EXCEPT",
+no caso selecionava todos os funcionários e todos os que estão alocados em algum 
+projeto e me retornava o que não estava alocado em nenhum projeto. 
+Quando estava testando fiz somente selecionando os nomes e quando consegui o resultado 
+com somente o funcionário que estava sem projeto coloquei o resto das colunas no 
+"SELECT", "FROM" e "GROUP BY". 
+
+> Nessa questão demorei bastante para conseguir concluir 100% e ter certeza de entregar 
+o que foi pedido, não consegui explicar exatamente de uma forma coerente mas eu consegui
+fazer e foi gratificante ter conseguido o resultado que eu gostaria.
 
 ![relatorio1](imgs/relatorio15.jpg)
 ___
